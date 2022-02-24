@@ -196,6 +196,7 @@ struct CarState {
   engineRPM @40 :Float32;
   brakeToggle @41 :Bool;
   passMode @42 :Bool;
+  devUI @43 :Bool;
 
   # which packets this state came from
   canMonoTimes @12: List(UInt64);
