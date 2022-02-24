@@ -105,6 +105,10 @@ struct CarEvent @0x9b1657f34caf3ad3 {
     highCpuUsage @105;
     cruiseMismatch @106;
     lkasDisabled @107;
+    manualSteeringRequired @108;
+    acceleratorDisabled @109;
+    lkasOnly @110;
+    longPreEnable @111;
 
     radarCanErrorDEPRECATED @15;
     communityFeatureDisallowedDEPRECATED @62;
@@ -187,6 +191,11 @@ struct CarState {
 
   # clutch (manual transmission only)
   clutchPressed @28 :Bool;
+
+  lkMode @39 :Bool;
+  engineRPM @40 :Float32;
+  brakeToggle @41 :Bool;
+  passMode @42 :Bool;
 
   # which packets this state came from
   canMonoTimes @12: List(UInt64);
