@@ -202,8 +202,10 @@ struct CarState {
   brakeToggle @41 :Bool;
   passMode @42 :Bool;
   devUI @43 :Bool;
+  setManualEPS :Bool;
   manualEPS :Float32;
   epsSettingSet :Float32;
+
 
 
   # which packets this state came from
