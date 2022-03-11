@@ -202,10 +202,6 @@ struct CarState {
   brakeToggle @41 :Bool;
   passMode @42 :Bool;
   devUI @43 :Bool;
-  setManualEPS :Bool;
-  manualEPS :Float32;
-  epsSettingSet :Float32;
-
 
 
   # which packets this state came from
@@ -475,6 +471,12 @@ struct CarParams {
   networkLocation @50 :NetworkLocation;  # Where Panda/C2 is integrated into the car's CAN network
 
   wheelSpeedFactor @63 :Float32; # Multiplier on wheels speeds to computer actual speeds
+
+
+  setManualEPS @66 :Bool;
+  manualEPS @67 :Float32;
+  epsSettingSet @68 :Float32;
+
 
   struct SafetyConfig {
     safetyModel @0 :SafetyModel;
