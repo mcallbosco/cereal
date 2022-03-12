@@ -202,9 +202,9 @@ struct CarState {
   brakeToggle @41 :Bool;
   passMode @42 :Bool;
   devUI @43 :Bool;
-  setManualEPS :Bool;
-  manualEPS :Float32;
-  epsSettingSet :Float32;
+  setManualEPS @44 :Bool;
+  manualEPS @45 :Float32;
+  epsSettingSet @46 :Float32;
 
 
 
