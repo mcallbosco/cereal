@@ -205,6 +205,7 @@ struct CarState {
   setManualEPS @44 :Bool;
   manualEPS @45 :Float32;
   epsSettingSet @46 :Float32;
+  tetherOnRoad @47 :Bool;
 
 
 
