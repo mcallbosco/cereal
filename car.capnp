@@ -114,6 +114,8 @@ struct CarEvent @0x9b1657f34caf3ad3 {
     keepHandsOnWheel @114;
     speedLimitActive @115;
     speedLimitValueChange @116;
+    slowingForOSMCurve @117;
+    speedLimitBelowCC @118;
 
     radarCanErrorDEPRECATED @15;
     communityFeatureDisallowedDEPRECATED @62;
