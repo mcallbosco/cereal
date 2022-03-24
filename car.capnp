@@ -164,6 +164,7 @@ struct CarState {
   # brake pedal, 0.0-1.0
   brake @5 :Float32;      # this is user pedal only
   brakePressed @6 :Bool;  # this is user pedal only
+  parkingBrake @39 :Bool;
   brakeHoldActive @38 :Bool;
 
   # steering wheel
@@ -314,7 +315,8 @@ struct RadarData @0x888ad6581cf0aacb {
 struct CarControl {
   # must be true for any actuator commands to work
   enabled @0 :Bool;
-  active @7 :Bool;
+  latActive @11: Bool;
+  longActive @12: Bool;
 
   # Actuator commands as computed by controlsd
   actuators @6 :Actuators;
@@ -324,8 +326,8 @@ struct CarControl {
   # and matches what is sent to the car
   actuatorsOutput @10 :Actuators;
 
-  roll @8 :Float32;
-  pitch @9 :Float32;
+  orientationNED @13 :List(Float32);
+  angularVelocity @14 :List(Float32);
 
   cruiseControl @4 :CruiseControl;
   hudControl @5 :HUDControl;
@@ -403,6 +405,9 @@ struct CarControl {
   gasDEPRECATED @1 :Float32;
   brakeDEPRECATED @2 :Float32;
   steeringTorqueDEPRECATED @3 :Float32;
+  activeDEPRECATED @7 :Bool;
+  rollDEPRECATED @8 :Float32;
+  pitchDEPRECATED @9 :Float32;
 }
 
 # ****** car param ******
@@ -423,7 +428,7 @@ struct CarParams {
   minSteerSpeed @8 :Float32;
   maxSteeringAngleDeg @54 :Float32;
   safetyConfigs @62 :List(SafetyConfig);
-  unsafeMode @65 :Int16;
+  alternativeExperience @65 :Int16;      # panda flag for features like no disengage on gas 
 
   steerMaxBP @11 :List(Float32);
   steerMaxV @12 :List(Float32);
@@ -565,6 +570,7 @@ struct CarParams {
     hyundaiLegacy @23;
     hyundaiCommunity @24;
     stellantis @25;
+    faw @26;
   }
 
   enum SteerControlType {
