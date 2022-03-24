@@ -201,7 +201,7 @@ struct CarState {
   # clutch (manual transmission only)
   clutchPressed @28 :Bool;
 
-  lkMode @39 :Bool;
+  lkMode @48 :Bool;
   engineRPM @40 :Float32;
   brakeToggle @41 :Bool;
   passMode @42 :Bool;
