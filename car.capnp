@@ -117,6 +117,7 @@ struct CarEvent @0x9b1657f34caf3ad3 {
     slowingForOSMCurve @117;
     speedLimitBelowCC @118;
     slowingForOSMCurveSound @119;
+    e2eStatus @120;
 
     radarCanErrorDEPRECATED @15;
     communityFeatureDisallowedDEPRECATED @62;
