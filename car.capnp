@@ -202,7 +202,6 @@ struct CarState {
   # clutch (manual transmission only)
   clutchPressed @28 :Bool;
 
-  lkMode @48 :Bool;
   engineRPM @40 :Float32;
   brakeToggle @41 :Bool;
   passMode @42 :Bool;
@@ -211,8 +210,9 @@ struct CarState {
   manualEPS @45 :Float32;
   epsSettingSet @46 :Float32;
   tetherOnRoad @47 :Bool;
-  e2eLong @48 :Bool;
-  e2eLongButtonToggle @49 :Bool;
+  lkMode @48 :Bool;
+  e2eLong @49 :Bool;
+  e2eLongButtonToggle @50 :Bool;
 
 
 
