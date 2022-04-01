@@ -211,8 +211,6 @@ struct CarState {
   epsSettingSet @46 :Float32;
   tetherOnRoad @47 :Bool;
   lkMode @48 :Bool;
-  e2eLong @49 :Bool;
-  e2eLongButtonToggle @50 :Bool;
 
 
 
