@@ -590,6 +590,7 @@ struct ControlsState @0x97ff69c53601abf1 {
     preEnabled @1;
     enabled @2;
     softDisabling @3;
+    overriding @4;
   }
 
   enum AlertStatus {
@@ -1265,6 +1266,10 @@ struct QcomGnss @0xde94674b07ae51c1 {
     gps @0;
     glonass @1;
     beidou @2;
+    unknown3 @3;
+    unknown4 @4;
+    unknown5 @5;
+    unknown6 @6;
   }
 
   enum SVObservationState @0xe81e829a0d6c83e9 {
