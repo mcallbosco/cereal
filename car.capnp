@@ -107,7 +107,6 @@ struct CarEvent @0x9b1657f34caf3ad3 {
     highCpuUsage @105;
     cruiseMismatch @106;
     lkasDisabled @107;
-    manualSteeringRequired @108;
     acceleratorDisabled @109;
     lkasOnly @110;
     longPreEnable @111;
@@ -120,6 +119,8 @@ struct CarEvent @0x9b1657f34caf3ad3 {
     speedLimitBelowCC @118;
     slowingForOSMCurveSound @119;
     e2eStatus @120;
+    manualSteeringRequired @121;
+
 
     radarCanErrorDEPRECATED @15;
     communityFeatureDisallowedDEPRECATED @62;
