@@ -119,6 +119,7 @@ struct InitData {
 struct FrameData {
   frameId @0 :UInt32;
   encodeId @1 :UInt32; # DEPRECATED
+  frameIdSensor @25 :UInt32;
 
   frameType @7 :FrameType;
   frameLength @3 :Int32;
@@ -151,6 +152,8 @@ struct FrameData {
 
   image @6 :Data;
   globalGainDEPRECATED @5 :Int32;
+
+  temperaturesC @24 :List(Float32);
 
   enum FrameType {
     unknown @0;
@@ -391,7 +394,7 @@ struct PandaState @0xa7649e2575e4591e {
   pandaType @10 :PandaType;
   ignitionCan @13 :Bool;
   safetyModel @14 :Car.CarParams.SafetyModel;
-  safetyParam @20 :Int16;
+  safetyParam @27 :UInt16;
   alternativeExperience @23 :Int16;
   faultStatus @15 :FaultStatus;
   powerSaveEnabled @16 :Bool;
@@ -458,6 +461,8 @@ struct PandaState @0xa7649e2575e4591e {
   hasGpsDEPRECATED @6 :Bool;
   fanSpeedRpmDEPRECATED @11 :UInt16;
   usbPowerModeDEPRECATED @12 :PeripheralState.UsbPowerMode;
+  safetyParamDEPRECATED @20 :Int16;
+  safetyParam2DEPRECATED @26 :UInt32;
 }
 
 struct PeripheralState {
@@ -563,6 +568,8 @@ struct ControlsState @0x97ff69c53601abf1 {
   ufAccelCmd @33 :Float32;
   aTarget @35 :Float32;
   curvature @37 :Float32;  # path curvature from vehicle model
+  desiredCurvature @61 :Float32;  # lag adjusted curvatures used by lateral controllers
+  desiredCurvatureRate @62 :Float32;
   forceDecel @51 :Bool;
 
   # UI alerts
@@ -636,7 +643,7 @@ struct ControlsState @0x97ff69c53601abf1 {
     saturated @8 :Bool;
     steeringAngleDesiredDeg @9 :Float32;
    }
-  
+
   struct LateralTorqueState {
     active @0 :Bool;
     error @1 :Float32;
@@ -647,6 +654,8 @@ struct ControlsState @0x97ff69c53601abf1 {
     f @5 :Float32;
     output @6 :Float32;
     saturated @7 :Bool;
+    actualLateralAccel @9 :Float32;
+    desiredLateralAccel @10 :Float32;
    }
 
   struct LateralLQRState {
@@ -815,6 +824,10 @@ struct EncodeIndex {
   timestampSof @6 :UInt64;
   timestampEof @7 :UInt64;
 
+  # encoder metadata
+  flags @8 :UInt32;
+  len @9 :UInt32;
+
   enum Type {
     bigBoxLossless @0;   # rcamera.mkv
     fullHEVC @1;         # fcamera.hevc
@@ -822,6 +835,7 @@ struct EncodeIndex {
     chffrAndroidH264 @3; # acamera
     fullLosslessClip @4; # prcamera.mkv
     front @5;            # dcamera.hevc
+    qcameraH264 @6;      # qcamera.ts
   }
 }
 
@@ -1091,6 +1105,42 @@ struct ProcLog {
     active @5 :UInt64;
     inactive @6 :UInt64;
     shared @7 :UInt64;
+  }
+}
+
+struct GnssMeasurements {
+  ubloxMonoTime @0 :UInt64;
+  correctedMeasurements @1 :List(CorrectedMeasurement);
+
+  positionECEF @2 :LiveLocationKalman.Measurement;
+  velocityECEF @3 :LiveLocationKalman.Measurement;
+  # Represents heading in degrees.
+  bearingDeg @4 :LiveLocationKalman.Measurement;
+  # Todo sync this with timing pulse of ublox
+
+  struct CorrectedMeasurement {
+    constellationId @0 :ConstellationId;
+    svId @1 :UInt8;
+    # Is 0 when not Glonass constellation.
+    glonassFrequency @2 :Int8;
+    pseudorange @3 :Float64;
+    pseudorangeStd @4 :Float64;
+    pseudorangeRate @5 :Float64;
+    pseudorangeRateStd @6 :Float64;
+    # Satellite position and velocity [x,y,z]
+    satPos @7 :List(Float64);
+    satVel @8 :List(Float64);
+  }
+
+  enum ConstellationId {
+      # Satellite Constellation using the Ublox gnssid as index
+      gps @0;
+      sbas @1;
+      galileo @2;
+      beidou @3;
+      imes @4;
+      qznss @5;
+      glonass @6;
   }
 }
 
@@ -1785,6 +1835,9 @@ struct NavInstruction {
   lanes @8 :List(Lane);
   showFull @9 :Bool;
 
+  speedLimit @10 :Float32; # m/s
+  speedLimitSign @11 :SpeedLimitSign;
+
   struct Lane {
     directions @0 :List(Direction);
     active @1 :Bool;
@@ -1798,6 +1851,10 @@ struct NavInstruction {
     straight @3;
   }
 
+  enum SpeedLimitSign {
+    mutcd @0; # US Style
+    vienna @1; # EU Style
+    }
 }
 
 struct NavRoute {
@@ -1810,9 +1867,10 @@ struct NavRoute {
 }
 
 struct EncodeData {
-  data @0 :Data;
-  timestampEof @1 :Int64;
-  idx @2 :UInt32;
+  idx @0 :EncodeIndex;
+  data @1 :Data;
+  header @2 :Data;
+  unixTimestampNanos @3 :UInt64;
 }
 
 struct Event {
@@ -1846,6 +1904,7 @@ struct Event {
     ubloxRaw @39 :Data;
     qcomGnss @31 :QcomGnss;
     gpsLocationExternal @48 :GpsLocationData;
+    gnssMeasurements @91 :GnssMeasurements;
     driverState @59 :DriverState;
     liveParameters @61 :LiveParametersData;
     cameraOdometry @63 :CameraOdometry;
@@ -1864,6 +1923,7 @@ struct Event {
     roadEncodeIdx @15 :EncodeIndex;
     driverEncodeIdx @76 :EncodeIndex;
     wideRoadEncodeIdx @77 :EncodeIndex;
+    qRoadEncodeIdx @90 :EncodeIndex;
 
     # systems stuff
     androidLog @20 :AndroidLogEntry;
@@ -1885,6 +1945,7 @@ struct Event {
     roadEncodeData @86 :EncodeData;
     driverEncodeData @87 :EncodeData;
     wideRoadEncodeData @88 :EncodeData;
+    qRoadEncodeData @89 :EncodeData;
 
     # *********** legacy + deprecated ***********
     model @9 :Legacy.ModelData; # TODO: rename modelV2 and mark this as deprecated

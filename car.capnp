@@ -123,9 +123,8 @@ struct CarEvent @0x9b1657f34caf3ad3 {
     canBusMissing @122;
     commIssueAvgFreq @123;
     cameraFrameRate @124;
-    
-
-
+    canBusMissing @125;
+    controlsdLagging @126;
 
     radarCanErrorDEPRECATED @15;
     communityFeatureDisallowedDEPRECATED @62;
@@ -193,6 +192,7 @@ struct CarState {
   stockAeb @30 :Bool;
   stockFcw @31 :Bool;
   espDisabled @32 :Bool;
+  accFaulted @50 :Bool;
 
   # cruise state
   cruiseState @10 :CruiseState;
@@ -232,6 +232,9 @@ struct CarState {
   # blindspot sensors
   leftBlindspot @33 :Bool; # Is there something blocking the left lane change
   rightBlindspot @34 :Bool; # Is there something blocking the right lane change
+
+  fuelGauge @51 :Float32; # battery or fuel tank level from 0.0 to 1.0
+  charging @52 :Bool;
 
   struct WheelSpeeds {
     # optional wheel speeds
@@ -503,7 +506,9 @@ struct CarParams {
 
   struct SafetyConfig {
     safetyModel @0 :SafetyModel;
-    safetyParam @1 :Int16;
+    safetyParam @3 :UInt16;
+    safetyParamDEPRECATED @1 :Int16;
+    safetyParam2DEPRECATED @2 :UInt32;
   }
 
   struct LateralParams {
@@ -595,6 +600,8 @@ struct CarParams {
     hyundaiCommunity @24;
     stellantis @25;
     faw @26;
+    body @27;
+    hyundaiHDA2 @28;
   }
 
   enum SteerControlType {
@@ -613,8 +620,10 @@ struct CarParams {
   struct CarFw {
     ecu @0 :Ecu;
     fwVersion @1 :Data;
-    address @2: UInt32;
-    subAddress @3: UInt8;
+    address @2 :UInt32;
+    subAddress @3 :UInt8;
+    responseAddress @4 :UInt32;
+    request @5 :List(Data);
   }
 
   enum Ecu {
